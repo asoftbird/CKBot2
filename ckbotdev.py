@@ -54,16 +54,16 @@ async def reloadall(ctx):
     
     await ctx.send(f"Reloaded {*exlist,}!")
 
-
-# load all cogs when bot starts
-for filename in os.listdir(cog_folder):
-    try:
-        if filename.endswith(".py"):
-            client.load_extension(f"cogs.{filename[:-3]}")
-            print(f"found file {filename}")
-    except discord.ext.commands.ExtensionNotFound:
-        print("Extension not found.")
-    except discord.ext.commands.ExtensionAlreadyLoaded:
-        print("Extenstion already loaded.")
+# TODO re-enable autoload; loading cogs manually for now
+# # load all cogs when bot starts
+# for filename in os.listdir(cog_folder):
+#     try:
+#         if filename.endswith(".py"):
+#             client.load_extension(f"cogs.{filename[:-3]}")
+#             print(f"found file {filename}")
+#     except discord.ext.commands.ExtensionNotFound:
+#         print("Extension not found.")
+#     except discord.ext.commands.ExtensionAlreadyLoaded:
+#         print("Extenstion already loaded.")
 
 client.run(TOKEN)
