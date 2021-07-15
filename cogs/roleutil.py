@@ -7,13 +7,15 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 role_spanjool_id = int(config['Roles']['R_SPANJOOL_ID'])
-role_praat_id = int(config['Roles']['R_PRAAT_ID'])
+role_burgerij_id = int(config['Roles']['R_BURGERIJ_ID'])
 role_ridder_id = int(config['Roles']['R_RIDDER_ID'])
-roles_removable_ids = [role_spanjool_id, role_praat_id, role_ridder_id]
+roles_removable_ids = [role_spanjool_id, role_burgerij_id, role_ridder_id]
+debug_channel_id = int(config['Debug']['OUTPUT_CHANNEL_ID'])
 
 class RoleUtils(commands.Cog):
     def __init__(self, client):
         self.client = client
+        
 
     @commands.Cog.listener() #event decorator for inside cogs
     async def on_ready(self):
@@ -34,7 +36,14 @@ class RoleUtils(commands.Cog):
     async def removeRoles(self, member: discord.Member, roles):
         await member.remove_roles(roles)
 
-    # ADD Spanjool REMOVE ridder, praat
+
+    @commands.command(aliases=['guildroles'])
+    async def getGuildRoles(self, ctx):
+        guild = ctx.guild
+        channel = self.client.get_channel(debug_channel_id)
+        await channel.send(f"Roles: {guild.roles}")
+
+    # ADD Spanjool REMOVE ridder, burgerij
     @commands.command(aliases=['s'])
     async def spanjool(self, ctx, member: discord.Member):
         guild = ctx.guild
@@ -48,16 +57,16 @@ class RoleUtils(commands.Cog):
         else:
             await ctx.send(f"User {member.display_name} already has this role!")
 
-    # ADD praat REMOVE spanjool
+    # ADD burgerij REMOVE spanjool
     @commands.command(aliases=['os'])
     async def ontspanjool(self, ctx, member: discord.Member):
         guild = ctx.guild
         __role_spanjool = guild.get_role(role_spanjool_id)
-        __role_praat = guild.get_role(role_praat_id)
+        __role_burgerij = guild.get_role(role_burgerij_id)
 
         if self.checkMemberHasRole(member, __role_spanjool):
             await self.removeRoles(member, __role_spanjool)
-            await self.setRoles(member, __role_praat)
+            await self.setRoles(member, __role_burgerij)
             await ctx.send(f"Removed {__role_spanjool} from {member.display_name}.")
         else:
             await ctx.send(f"{member.display_name} does not have {__role_spanjool}!")
